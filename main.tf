@@ -19,9 +19,12 @@ resource "aws_ecs_service" "main" {
     container_port   = var.container_port
   }
 
-  capacity_provider_strategy {
-    capacity_provider = var.capacity_provider
-    weight            = 1
+  dynamic "capacity_provider_strategy" {
+    for_each = length(var.capacity_provider) == 0 ? [] : [1]
+    content {
+      capacity_provider = var.capacity_provider
+      weight            = 1
+    }
   }
 
   tags = var.tags
